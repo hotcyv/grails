@@ -1,0 +1,8 @@
+package tarefas
+
+class Categoria {
+    String nome
+
+    static constraints = {
+    }
+}

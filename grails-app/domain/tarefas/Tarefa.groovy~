@@ -1,0 +1,10 @@
+package tarefas
+
+class Tarefa {
+    String nome
+    Date deadLine
+ 
+
+    static constraints = {
+    }
+}
