@@ -6,9 +6,10 @@ import grails.rest.*
 
 class Tarefa {
     String nome
-    Date deadLine
-    boolean completed
-    Categoria categoria
+    String deadLine
+    String complete
+    //Categoria categoria
+    String categoria
 
     static constraints = {
     }

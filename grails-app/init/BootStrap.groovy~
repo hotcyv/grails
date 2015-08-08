@@ -3,8 +3,8 @@ package tarefas
 class BootStrap {
 
     def init = { servletContext ->
-        new Tarefa(nome:"Estudar OpenData...",categoria: new Categoria(nome:"Mestrado")).save()
-        new Tarefa(nome:"Estudar Música...",categoria: new Categoria(nome:"Hobby")).save()
+        new Tarefa(nome:"Estudar OpenData...",deadLine:new Date(),categoria: new Categoria(nome:"Mestrado")).save()
+        new Tarefa(nome:"Estudar Música...",deadLine:new Date(),categoria: new Categoria(nome:"Hobby")).save()
         
     }
     def destroy = {

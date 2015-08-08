@@ -26,16 +26,17 @@
 		<section id="taskCreation" class="not">
 			<form id="taskForm">
 				<input type="hidden" name="id" />
+				<input type="hidden" name="complete" value="false" />
 				<div>
 					<label>Tarefa</label> 
-					<input type="text" required="required" name="task" class="large" placeholder="Estudar e programar" maxlength="200"/>
+					<input type="text" required="required" name="nome" class="large" placeholder="Estudar e programar" maxlength="200"/>
 				</div>
 				<div>
-					<label>Finalizar até</label> <input type="date" required="required" name="requiredBy" />
+					<label>Finalizar até</label> <input type="date" required="required" name="deadLine" />
 				</div>
 				<div>
 					<label>Categoria</label> 
-					<select name="category">
+					<select name="categoria">
 						<option value="Pessoal">Pessoal</option>
 						<option value="Profissional">Profissional</option>
 					</select>
@@ -79,15 +80,15 @@
 <tr>
 	<!-- Utilizar estrutura de condições da engine de template para esconder as ações de editar e completar para as tarefas já completadas-->
 	<!-- O conteúdo das tags é grifado se a condição for atendida: tarefa completa.-->
-	<td {{if complete == true}} class="taskCompleted" {{/if}}>{{= nome}}</td>
-	<td {{if complete == true}} class="taskCompleted" {{/if}}>
+	<td {{if complete == "true"}} class="taskCompleted" {{/if}}>{{= nome}}</td>
+	<td {{if complete == "true"}} class="taskCompleted" {{/if}}>
 		<time datetime="{{= deadLine}}">{{= deadLine}}</time>
     </td>
-	<td {{if complete == true}} class="taskCompleted" {{/if}}>{{= categoria}}</td>
+	<td {{if complete == "true"}} class="taskCompleted" {{/if}}>{{= categoria}}</td>
 	<td>
 		<nav>
 		<!-- As opções de editar e completar serão apresentadas se a condição for atendida: tafera incompleta.-->
-		{{if complete != true}}
+		{{if complete == "false"}}
 			<a href="#" class="editRow" data-task-id="{{= id}}">Edit</a>
 			<a href="#" class="completeRow" data-task-id="{{= id}}">Complete</a>
 		{{/if}}

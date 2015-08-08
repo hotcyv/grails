@@ -33,6 +33,7 @@ tasksController = function() {
 	function errorLogger(errorCode, errorMessage) {
 		console.log(errorCode +':'+ errorMessage);
 	}
+
 	var taskPage;
 	var initialised = false;
 	return {
@@ -47,78 +48,76 @@ tasksController = function() {
 				
 				$(taskPage).find('#btnAddTask').click( function(evt) {
 					evt.preventDefault();
-					$(taskPage ).find('#taskCreation').removeClass( 'not');
+					$(taskPage ).find('#taskCreation').removeClass('not');
 				});
 				$(taskPage).find('#tblTasks tbody').on('click', 'tr',
 					function(evt) {
 						$(evt.target ).closest('td').siblings( ).andSelf( ).toggleClass('rowHighlight');
 				});
-				$(taskPage).find('#tblTasks tbody').on('click', '.deleteRow', 
-					function(evt) { 					
-						console.log('teste');
-						storageEngine.delete('task', $(evt.target).data().taskId, 
-							function() {
-								$(evt.target).parents('tr').remove();
-								tasksController.loadTasks();
-							}, errorLogger);
-					}
-				);
 				$(taskPage).find('#saveTask').click(function(evt) {
 					evt.preventDefault();
 					if ($(taskPage).find('form').valid()) {
 						var task = $(taskPage).find('form').toObject();		
-						storageEngine.save('task', task, function() {
-							tasksController.loadTasks();
-							$(':input').val('');
+						storageEngine.save(task, function() {
+							$(taskPage).find('form').trigger('reset');
 							$(taskPage).find('#taskCreation').addClass('not');
+							tasksController.loadTasks();
 						}, errorLogger);
 					}
 				});
 				$(taskPage).find('#tblTasks tbody').on('click', '.editRow', 
 					function(evt) { 
 						$(taskPage).find('#taskCreation').removeClass('not');
-						storageEngine.findById('task', $(evt.target).data().taskId, function(task) {
+						$(taskPage).find('#taskCreation').removeClass('not');
+						storageEngine.findById($(evt.target).data().taskId, function(task) {
 							$(taskPage).find('form').fromObject(task);
 						}, errorLogger);
 					}
 				);
-				//Semelhante à ação editar, porém o objeto a ser carregado no form é vázio, limpando, assim, o form.
-				$(taskPage).find('#clearTask').click(function(evt) {
-					evt.preventDefault();
-					//Deserializa o objeto vazio no formulário
-					$(taskPage).find('form').fromObject({});
-				});
 				//Semelhante à ação editar, localiza-se a tarefa selecionada e adiciona-se um atributo "completado", salvando-se a alteração em seguida.
 				$(taskPage).find('#tblTasks tbody').on('click','.completeRow', 
 					function(evt) {
-						storageEngine.findById('task', $(evt.target).data().taskId, 
+						storageEngine.findById($(evt.target).data().taskId, 
 							function(task) {
 								//Novo atributo da tarefa associado
 								task.complete = true;
-								storageEngine.save('task', task, 
+								storageEngine.save(task, 
 								//Forçar a atualização da lista de tarefas
 									function() {
 										tasksController.loadTasks();
 									},errorLogger);
 							}, errorLogger);
-					});
+					}
+				);
+				$(taskPage).find('#tblTasks tbody').on('click', '.deleteRow', 
+					function(evt) {
+						storageEngine.delete($(evt.target).data().taskId, 
+							function() {
+								$(evt.target).parents('tr').remove();
+								tasksController.loadTasks();
+							}, errorLogger);
+					}
+				);
+				//Semelhante à ação editar, porém o objeto a ser carregado no form é vázio, limpando, assim, o form.
+				$(taskPage).find('#clearTask').click(function(evt) {
+					evt.preventDefault();
+					//Reinicia o formulário
+					$(taskPage).find('form').trigger('reset');
+				});
 				initialised = true;
 			}
 		},
 		loadTasks : function() {
-			storageEngine.findAll('task', 
+			storageEngine.findAll( 
 				function(tasks) {
 					//Ordenar o array das tarefas por meio do método sort utilizando a lógica de comparação do método compareTo do objeto Date.
 					//Reverter a ordem asc padrão: .reverse() ao final
 					tasks.sort(function(task1, task2) {
-						return Date.parse(task1.requiredBy).compareTo(Date.parse(task2.requiredBy));
+						return Date.parse(task1.deadLine).compareTo(Date.parse(task2.deadLine));
 					}).reverse();
 					$(taskPage).find('#tblTasks tbody').empty();
 					$.each(tasks, function(index, task) {
 						//Precarregar e indicar à engine de template o status da tarefa.
-						if (!task.complete) {
-							task.complete = false;
-						}
 						$('#taskRow').tmpl(task).appendTo($(taskPage).find('#tblTasks tbody'));
 					});
 					//Atualizar o contador ao carregar as taferas
