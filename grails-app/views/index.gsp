@@ -9,7 +9,7 @@
     <asset:javascript src="jquery.tmpl.js"/>
     <asset:javascript src="jquery-serialization.js"/>
     <asset:javascript src="tasks-controller.js"/>
-    <asset:javascript src="tasks-webstorage.js"/>
+    <asset:javascript src="tasks-restful.js"/>
     <asset:javascript src="date.js"/>
     <script>
     $(document).ready(function() {
@@ -79,11 +79,11 @@
 <tr>
 	<!-- Utilizar estrutura de condições da engine de template para esconder as ações de editar e completar para as tarefas já completadas-->
 	<!-- O conteúdo das tags é grifado se a condição for atendida: tarefa completa.-->
-	<td {{if complete == true}} class="taskCompleted" {{/if}}>{{= task}}</td>
+	<td {{if complete == true}} class="taskCompleted" {{/if}}>{{= nome}}</td>
 	<td {{if complete == true}} class="taskCompleted" {{/if}}>
-		<time datetime="{{= requiredBy}}">{{= requiredBy}}</time>
+		<time datetime="{{= deadLine}}">{{= deadLine}}</time>
     </td>
-	<td {{if complete == true}} class="taskCompleted" {{/if}}>{{= category}}</td>
+	<td {{if complete == true}} class="taskCompleted" {{/if}}>{{= categoria}}</td>
 	<td>
 		<nav>
 		<!-- As opções de editar e completar serão apresentadas se a condição for atendida: tafera incompleta.-->
