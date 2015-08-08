@@ -9,7 +9,7 @@
 //= require_tree .
 //= require_self
 
-/*if (typeof jQuery !== 'undefined') {
+if (typeof jQuery !== 'undefined') {
     (function($) {
         $('#spinner').ajaxStart(function() {
             $(this).fadeIn();
@@ -17,4 +17,4 @@
             $(this).fadeOut();
         });
     })(jQuery);
-}*/
+}

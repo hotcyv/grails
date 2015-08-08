@@ -2,7 +2,8 @@ package tarefas
 
 class Categoria {
     String nome
-    static hasMany = [tarefas: Tarefa]
+    
+    static belongsTo = [tarefa:Tarefa]
 
     static constraints = {
     }

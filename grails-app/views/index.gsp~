@@ -79,11 +79,11 @@
 <tr>
 	<!-- Utilizar estrutura de condições da engine de template para esconder as ações de editar e completar para as tarefas já completadas-->
 	<!-- O conteúdo das tags é grifado se a condição for atendida: tarefa completa.-->
-	<td {{if complete == true}} class="taskCompleted" {{/if}}>{{= task}}</td>
+	<td {{if complete == true}} class="taskCompleted" {{/if}}>${task}</td>
 	<td {{if complete == true}} class="taskCompleted" {{/if}}>
-		<time datetime="{{= requiredBy}}">{{= requiredBy}}</time>
+		<time datetime="${requiredBy}">${requiredBy}</time>
     </td>
-	<td {{if complete == true}} class="taskCompleted" {{/if}}>{{= category}}</td>
+	<td {{if complete == true}} class="taskCompleted" {{/if}}>${category}</td>
 	<td>
 		<nav>
 		<!-- As opções de editar e completar serão apresentadas se a condição for atendida: tafera incompleta.-->
