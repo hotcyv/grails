@@ -7,7 +7,7 @@ import grails.rest.*
 class Categoria {
     String nome
     
-    //static belongsTo = [tarefa:Tarefa]
+    static hasMany = [tarefas: Tarefa]
 
     static constraints = {
     }

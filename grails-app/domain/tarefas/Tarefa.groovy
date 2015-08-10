@@ -8,8 +8,7 @@ class Tarefa {
     String nome
     String deadLine
     String complete
-    //Categoria categoria
-    String categoria
+    static belongsTo = [categoria: Categoria]
 
     static constraints = {
     }
