@@ -1,2 +1,2 @@
 # grails
-Gestão de Tarefas em Grails
+ToDo Grails Application: using MVC Java Script and RESTful Grails API
