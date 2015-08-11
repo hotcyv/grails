@@ -29,6 +29,17 @@ tasksController = function() {
 			}
 		});
 	}
+
+	function loadSelect() {
+		storageEngine.findAll('categorias',
+						function(categorias) {
+							$(taskPage).find('#categoria').empty();
+							$.each(categorias, function(index, categoria) {
+								$(taskPage).find('#categoria').append('<option value="'+categoria.id+'">'+categoria.nome+'</option>');	
+							});
+
+						},errorLogger);
+	}
 	
 	function errorLogger(errorCode, errorMessage) {
 		console.log(errorCode +':'+ errorMessage);
@@ -38,50 +49,53 @@ tasksController = function() {
 	var initialised = false;
 	return {
 		init : function(page) {
-			storageEngine.init(function() {
-				storageEngine.initObjectStore('task', function() {}, errorLogger)
-			}, errorLogger);
 			if (!initialised) {
 				taskPage = page;
 				$(taskPage).find('[required="required"]').prev('label').append('<span>*</span>').children('span').addClass('required');
 				$(taskPage).find('tbody tr:even').addClass('even');
-				
+				loadSelect();
 				$(taskPage).find('#btnAddTask').click( function(evt) {
 					evt.preventDefault();
-					$(taskPage ).find('#taskCreation').removeClass('not');
+					$(taskPage).find('#taskCreation').removeClass('not');
 				});
+
 				$(taskPage).find('#tblTasks tbody').on('click', 'tr',
 					function(evt) {
-						$(evt.target ).closest('td').siblings( ).andSelf( ).toggleClass('rowHighlight');
+						$(evt.target).closest('td').siblings( ).andSelf( ).toggleClass('rowHighlight');
 				});
+
 				$(taskPage).find('#saveTask').click(function(evt) {
 					evt.preventDefault();
 					if ($(taskPage).find('form').valid()) {
 						var task = $(taskPage).find('form').toObject();		
-						storageEngine.save(task, function() {
+						storageEngine.save('tarefa',task, function() {
 							$(taskPage).find('form').trigger('reset');
+							$(taskPage).find('#taskId').removeAttr('value');
 							$(taskPage).find('#taskCreation').addClass('not');
+							loadSelect();
 							tasksController.loadTasks();
 						}, errorLogger);
 					}
 				});
+
 				$(taskPage).find('#tblTasks tbody').on('click', '.editRow', 
 					function(evt) { 
+						loadSelect();
 						$(taskPage).find('#taskCreation').removeClass('not');
-						$(taskPage).find('#taskCreation').removeClass('not');
-						storageEngine.findById($(evt.target).data().taskId, function(task) {
+						storageEngine.findById('tarefa',$(evt.target).data().taskId, function(task) {
 							$(taskPage).find('form').fromObject(task);
 						}, errorLogger);
 					}
 				);
+
 				//Semelhante à ação editar, localiza-se a tarefa selecionada e adiciona-se um atributo "completado", salvando-se a alteração em seguida.
 				$(taskPage).find('#tblTasks tbody').on('click','.completeRow', 
 					function(evt) {
-						storageEngine.findById($(evt.target).data().taskId, 
+						storageEngine.findById('tarefa', $(evt.target).data().taskId, 
 							function(task) {
 								//Novo atributo da tarefa associado
 								task.complete = true;
-								storageEngine.save(task, 
+								storageEngine.save('tarefa', task, 
 								//Forçar a atualização da lista de tarefas
 									function() {
 										tasksController.loadTasks();
@@ -89,15 +103,17 @@ tasksController = function() {
 							}, errorLogger);
 					}
 				);
+
 				$(taskPage).find('#tblTasks tbody').on('click', '.deleteRow', 
 					function(evt) {
-						storageEngine.delete($(evt.target).data().taskId, 
+						storageEngine.delete('tarefa', $(evt.target).data().taskId, 
 							function() {
 								$(evt.target).parents('tr').remove();
 								tasksController.loadTasks();
 							}, errorLogger);
 					}
 				);
+
 				//Semelhante à ação editar, porém o objeto a ser carregado no form é vázio, limpando, assim, o form.
 				$(taskPage).find('#clearTask').click(function(evt) {
 					evt.preventDefault();
@@ -108,7 +124,7 @@ tasksController = function() {
 			}
 		},
 		loadTasks : function() {
-			storageEngine.findAll( 
+			storageEngine.findAll('tarefas',
 				function(tasks) {
 					//Ordenar o array das tarefas por meio do método sort utilizando a lógica de comparação do método compareTo do objeto Date.
 					//Reverter a ordem asc padrão: .reverse() ao final
